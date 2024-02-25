@@ -24,8 +24,8 @@ const useForm = (props: { defaultValue: Record<string, any> }) => {
   const handleWatch = React.useCallback(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     (obj: typeof props.defaultValue, _fullPath: string) => {
-      console.log("obj", obj);
       updateFormValue(obj);
+      console.log("_fullPath", _fullPath);
     },
     [props]
   );
@@ -35,16 +35,17 @@ const useForm = (props: { defaultValue: Record<string, any> }) => {
       watch: handleWatch,
     });
   }
-  const _getFieldArray = <T>( name: string ): Partial<T>[] => compact(get(formState.mount ? formValue : defaultValue, name, []));
+  const _getFieldArray = <T>(name: string): Partial<T>[] =>
+    compact(get(formState.mount ? formValue : defaultValue, name, []));
   const _updateFieldArray = (name: string, value: unknown) => {
-    console.log(name, value)
-  }
+    // console.log(name, value);
+    set(_formControl.current, name, value);
+  };
   return {
     formState,
     formValue,
     control: { _getFieldArray, _updateFieldArray },
     setFormValue: (path: string, value: unknown) => {
-      console.log("_formControl.current", _formControl.current);
       set(_formControl.current, path, value);
     },
   };
